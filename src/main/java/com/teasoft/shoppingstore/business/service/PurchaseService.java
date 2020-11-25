@@ -1,10 +1,6 @@
 package com.teasoft.shoppingstore.business.service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import com.teasoft.shoppingstore.business.domain.ProductPurchase;
 import com.teasoft.shoppingstore.data.entity.Customer;
@@ -30,34 +26,24 @@ public class PurchaseService {
     }
 
     public List<ProductPurchase> getProductPurchasesForDate(Date date){
-        Iterable<Product> products = this.productRepository.findAll();
-        Map<Long, ProductPurchase> productPurchaseMap = new HashMap<>();
-        products.forEach(product -> {
-            ProductPurchase productPurchase = new ProductPurchase();
-            productPurchase.setProductId(product.getId());
-            productPurchase.setProductDescription(product.getDescription());
-            productPurchase.setProductPrice(product.getPrice());
-            productPurchaseMap.put(product.getId(), productPurchase);
-        });
+        List<ProductPurchase> productPurchases = new ArrayList<>();
         Iterable<Purchase> purchases = this.purchaseRepository.findPurchaseByPurchaseDate(new java.sql.Date(date.getTime()));
         purchases.forEach(purchase -> {
-            ProductPurchase productPurchase = productPurchaseMap.get(purchase.getProductId());
-            productPurchase.setDate(date);
-            Customer customer = this.customerRepository.findById(purchase.getCustomerId()).get();
-            productPurchase.setFirstName(customer.getFirstName());
-            productPurchase.setLastName(customer.getLastName());
-            productPurchase.setPurchaseId(customer.getId());
+            ProductPurchase productPurchase = new ProductPurchase();
+            Iterable<Product> products = this.productRepository.findProductById(purchase.getId());
+            products.forEach(product -> {
+                productPurchase.setProductId(product.getId());
+                productPurchase.setProductDescription(product.getDescription());
+                productPurchase.setProductPrice(product.getPrice());
+                productPurchase.setDate(date);
+                Customer customer = this.customerRepository.findById(purchase.getCustomerId()).get();
+                productPurchase.setFirstName(customer.getFirstName());
+                productPurchase.setLastName(customer.getLastName());
+                productPurchase.setPurchaseId(customer.getId());
+                productPurchases.add(productPurchase);
+            });
         });
-        List<ProductPurchase> productPurchases = new ArrayList<>();
-        for(Long id: productPurchaseMap.keySet()){
-            productPurchases.add(productPurchaseMap.get(id));
-        }
-        productPurchases.sort((o1, o2) -> {
-            if (o1.getProductDescription().equals(o2.getProductDescription())){
-                return Long.compare(o1.getProductPrice(), o2.getProductPrice());
-            }
-            return o1.getProductDescription().compareTo(o2.getProductDescription());
-        });
+        Collections.sort(productPurchases);
         return productPurchases;
     }
 

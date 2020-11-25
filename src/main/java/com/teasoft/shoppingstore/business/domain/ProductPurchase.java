@@ -2,7 +2,7 @@ package com.teasoft.shoppingstore.business.domain;
 
 import java.util.Date;
 
-public class ProductPurchase {
+public class ProductPurchase implements Comparable<ProductPurchase> {
     private long productId;
     private long purchaseId;
     private String productDescription;
@@ -65,5 +65,11 @@ public class ProductPurchase {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    @Override
+    public int compareTo(ProductPurchase o) {
+        // Sort by date
+        return this.date.compareTo(o.date);
     }
 }
