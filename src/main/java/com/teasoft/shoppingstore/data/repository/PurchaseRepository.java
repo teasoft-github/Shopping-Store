@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PurchaseRepository extends CrudRepository<Purchase, Long> {
-    Iterable<Purchase> findPurchaseByDate(Date date);
+    Iterable<Purchase> findPurchaseByPurchaseDate(Date date);
 }

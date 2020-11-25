@@ -1,7 +1,6 @@
 package com.teasoft.shoppingstore.business.service;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +31,7 @@ public class PurchaseService {
 
     public List<ProductPurchase> getProductPurchasesForDate(Date date){
         Iterable<Product> products = this.productRepository.findAll();
-        Map<Long, ProductPurchase> productPurchaseMap = new HashMap();
+        Map<Long, ProductPurchase> productPurchaseMap = new HashMap<>();
         products.forEach(product -> {
             ProductPurchase productPurchase = new ProductPurchase();
             productPurchase.setProductId(product.getId());
@@ -40,7 +39,7 @@ public class PurchaseService {
             productPurchase.setProductPrice(product.getPrice());
             productPurchaseMap.put(product.getId(), productPurchase);
         });
-        Iterable<Purchase> purchases = this.purchaseRepository.findPurchaseByDate(new java.sql.Date(date.getTime()));
+        Iterable<Purchase> purchases = this.purchaseRepository.findPurchaseByPurchaseDate(new java.sql.Date(date.getTime()));
         purchases.forEach(purchase -> {
             ProductPurchase productPurchase = productPurchaseMap.get(purchase.getProductId());
             productPurchase.setDate(date);
@@ -54,8 +53,8 @@ public class PurchaseService {
             productPurchases.add(productPurchaseMap.get(id));
         }
         productPurchases.sort((o1, o2) -> {
-            if (o1.getProductDescription() == o2.getProductDescription()){
-                return Long.valueOf(o1.getProductPrice()).compareTo(Long.valueOf(o2.getProductPrice()));
+            if (o1.getProductDescription().equals(o2.getProductDescription())){
+                return Long.compare(o1.getProductPrice(), o2.getProductPrice());
             }
             return o1.getProductDescription().compareTo(o2.getProductDescription());
         });
@@ -65,9 +64,9 @@ public class PurchaseService {
     public List<Customer> getCustomers(){
         Iterable<Customer> customers = this.customerRepository.findAll();
         List<Customer> customerList = new ArrayList<>();
-        customers.forEach(customer -> customerList.add(customer));
+        customers.forEach(customerList::add);
         customerList.sort((o1, o2) -> {
-            if (o1.getLastName() == o2.getLastName()){
+            if (o1.getLastName().equals(o2.getLastName())){
                 return o1.getFirstName().compareTo(o2.getFirstName());
             }
             return o1.getLastName().compareTo(o2.getLastName());

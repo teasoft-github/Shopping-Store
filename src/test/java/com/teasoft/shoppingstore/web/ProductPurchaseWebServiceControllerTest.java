@@ -21,7 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@WebMvcTest(ProductPurchaseWebController.class)
+@WebMvcTest(ProductPurchaseWebServiceController.class)
 public class ProductPurchaseWebServiceControllerTest {
     @MockBean
     private PurchaseService purchaseService;
@@ -47,6 +47,6 @@ public class ProductPurchaseWebServiceControllerTest {
 
         this.mockMvc.perform(get("/api/purchases?date=2020-01-01"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("Unit, Junit")));
+                .andExpect(content().string(containsString("Junit Product")));
     }
 }

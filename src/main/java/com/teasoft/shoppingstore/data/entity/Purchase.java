@@ -19,8 +19,8 @@ public class Purchase {
     private long productId;
     @Column(name="CUSTOMER_ID")
     private long customerId;
-    @Column(name="DATE")
-    private Date date;
+    @Column(name="PURCHASE_DATE")
+    private Date purchaseDate;
 
     public long getId() {
         return id;
@@ -46,11 +46,11 @@ public class Purchase {
         this.customerId = customerId;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getPurchaseDate() {
+        return purchaseDate;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setPurchaseDate(Date purchaseDate) {
+        this.purchaseDate = purchaseDate;
     }
 }
